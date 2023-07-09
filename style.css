@@ -6,14 +6,11 @@
 }
 body {
 	padding: 50px;
-	/* font-family: 'Poppins',sans-serif; */
-	font-family: "Poppins", sans-serif;
 	font-family: "Graduate", cursive;
-	/* background-image: linear-gradient(to top left, #f0ff50, #ff8181); */
 	background-color: #1e2f3f;
 	height: 100vh;
 	transition: all 0.5s;
-	/* background-image: linear-gradient(to left,rgb(255, 7, 201) , rgb(255, 57, 57)); */
+	scrollbar-arrow-color: red;
 }
 .calc-container {
 	background-color: #374352;
@@ -27,7 +24,6 @@ body {
 	margin: auto;
 	padding: 30px;
 	border-radius: 20px;
-	/* box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.5); */
 	box-shadow: 2px 2px 5px rgb(50, 30, 50),
 		inset -2px -2px 8px rgba(197, 129, 205, 0.5);
 }
@@ -39,9 +35,7 @@ body {
 	font-weight: 600;
 	border: none;
 	cursor: pointer;
-	/* background-color: #374352; */
 	background-color: transparent;
-
 	color: white;
 	box-shadow: 2px 2px 5px rgb(50, 30, 50),
 		-2px -2px 8px rgba(197, 129, 205, 0.5);
@@ -57,16 +51,13 @@ body {
 	color: white;
 }
 .message {
-	background-color:transparent;
+	background-color: transparent;
 	border: none;
-
 	height: 30px;
 	width: 200px;
 	position: absolute;
 	top: 15px;
 	right: 50px;
-	/* color: red; */
-	/* color: #0485f4; */
 	color: #c581cd;
 	font-family: "Graduate", cursive;
 	font-size: 1.5rem;
@@ -77,29 +68,18 @@ body {
 	grid-column: span 4;
 	color: white;
 	font-family: "Graduate", cursive;
-	/* height: 200px; */
 	border-radius: 20px;
 	margin-bottom: 10px;
-	overflow: hidden;
 	text-align: end;
 	padding: 0 25px;
 	font-size: 3rem;
 	font-weight: 600;
 	border: none;
 	background-color: transparent;
-	/* background-color: rgb(163, 209, 255); */
-	/* box-shadow: inset 0px 0px 5px 5px rgba(0, 0, 0, 0.5); */
 }
-/* .btn-ac {
-	grid-column: span 2;
-} */
+
 .btn-equal {
 	grid-column: span 2;
-	/* background-image: linear-gradient(
-		to left,
-		rgb(255, 7, 201),
-		rgb(255, 57, 57)
-	); */
 	background-color: rgb(197, 129, 205);
 }
 
@@ -114,7 +94,6 @@ body {
 	border-radius: 50%;
 	top: 10px;
 	left: 10px;
-	/* box-shadow: 0px 0px 5px rgb(197, 129, 205); */
 	filter: drop-shadow(0px 0px 3px rgb(197, 129, 205));
 }
 .btn-switch-mode > img {
@@ -145,13 +124,15 @@ body {
 	body {
 		padding: 30px;
 	}
+	.display {
+		font-size: 2.5rem;
+	}
 }
 @media screen and (max-width: 480px) {
 	body {
 		padding: 20px;
 	}
 	.calc-container {
-		/* height: 550px; */
 		padding: 25px 20px;
 		gap: 12px;
 	}
