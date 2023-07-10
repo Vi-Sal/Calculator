@@ -34,7 +34,7 @@ $(document).ready(function () {
 
 	//*# FUNCTIONALITIES
 
-	// Handle for calculation
+	// HANDLE FOR CALCULATION
 	function calculate(btnValue) {
 		result = $(".display").val();
 
