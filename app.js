@@ -29,138 +29,146 @@ $(document).ready(function () {
 
 	let haveDot = false;
 	let dark = true;
+	let tempDot = false;
 
 	//*# -------------------------------------
 
 	//*# FUNCTIONALITIES
 
-	// HANDLE FOR CALCULATION
-	function calculate(btnValue) {
+	// Handle for calculation
+	function calculate(curValue) {
 		result = $(".display").val();
+		const lastElement = result.slice(-1);
 
 		// REPLACE ALL COMMAS ' , ' WITH ''
 		result = result.replaceAll(",", "");
 
 		let length = result.length;
 
-		if (["+", "-", "×", "÷", "AC"].includes(btnValue)) haveDot = false;
+		if ([...operators, "AC"].includes(curValue)) {
+			tempDot = haveDot;
+			haveDot = false;
+		}
 
-		if (prevValue === "=" && !["+", "-", "×", "÷", "N&P"].includes(btnValue))
+		if (prevValue === "=" && ![...operators, "N&P"].includes(curValue))
 			result = "";
 
-		if (result === "0" && !operators.includes(btnValue)) result = "";
+		if (result === "0" && !operators.includes(curValue)) result = "";
 
+		// MAIN FILTER
 		if (
-			(btnValue === "=" && operators.includes(prevValue)) ||
-			(prevValue === "." && btnValue === ".") ||
-			(btnValue === "." && haveDot) ||
-			(result === "0" && btnValue === "0") ||
-			(["-", "+"].includes(prevValue) && btnValue === "0") ||
-			(btnValue === "=" && result === "") ||
-			(operators.includes(result.slice(-1)) && btnValue === "N&P")
-		) {
+			(curValue === "0" && result === "0") ||
+			(curValue === "." && lastElement === ".") ||
+			(curValue === "." && haveDot) ||
+			(curValue === "=" && result === "") ||
+			(curValue === "=" && operators.includes(lastElement)) ||
+			(curValue === "N&P" && operators.includes(lastElement))
+		)
 			return;
-		} else {
-			// USING SWITCH CASE
-			switch (btnValue) {
-				case "=": {
-					result = result.replaceAll("÷", "/").replaceAll("×", "*");
 
-					try {
-						result = eval(result);
-						if (result === Infinity || result === -Infinity) {
-							throw new Error("Can't Divide by 0");
-						}
-					} catch (error) {
-						length = error.message.length;
-
-						// HANDLE WITH TEXT LIMIT
-						limitText(length);
-
-						$(".display").val(error.message);
-
-						return;
+		// PROCESSING
+		switch (curValue) {
+			case "=": {
+				// REPLACE SYMBOLS WITH OPERATORS
+				result = result.replaceAll("÷", "/").replaceAll("×", "*");
+				try {
+					result = eval(result);
+					if (result === Infinity || result === -Infinity) {
+						throw new Error("Can't Divide by 0");
 					}
-					// IF RESULT CONTAINS DOT ( . ) THEN SET HAVDOT TO TRUE
-					if (result.toString().includes(".")) haveDot = true;
-					break;
-				}
-				case "AC": {
-					result = "0";
-					break;
-				}
-				case "DEL": {
-					// IF WE DELETED A DOT ( . ) THEN SET haveDot TO FALSE
-					if (result.slice(-1) === ".") haveDot = false;
+				} catch (error) {
+					length = error.message.length;
 
-					result = result.slice(0, -1);
+					// HANDLE WITH TEXT LIMIT
+					limitText(length);
 
-					if (result === "") result = "0";
-					break;
+					$(".display").val(error.message);
+
+					return;
 				}
-				case "N&P": {
-					if (result !== "") result = eval(`-(${result})`);
-					if (result === "") result = "-0";
-					break;
-				}
-				default: {
-					if (btnValue === ".") haveDot = true;
-
-					if (
-						(btnValue === "." && result === "") ||
-						(btnValue === "." && operators.includes(prevValue))
-					)
-						btnValue = "0.";
-
-					if (
-						["+", "-", "×", "÷", "."].includes(
-							result.toString().slice(-1)
-						) &&
-						operators.includes(btnValue)
-					) {
-						result = result.toString().slice(0, -1);
-					}
-
-					result += btnValue;
-					break;
-				}
+				// IF RESULT CONTAINS DOT ( . ) THEN SET HAVDOT TO TRUE
+				if (result.toString().includes(".")) haveDot = true;
+				break;
 			}
+			case "AC": {
+				result = "0";
+				break;
+			}
+			case "DEL": {
+				// IF WE DELETED OPERATOR THAN SET haveDot to True
+				if (operators.includes(lastElement) && tempDot) haveDot = true;
 
-			// CHECK FOR LIMIT TEXT
-			length = result.toString().length;
-			limitText(length);
+				// IF WE DELETED A DOT ( . ) THEN SET haveDot TO FALSE
+				if (lastElement === ".") haveDot = false;
 
-			// FORMAT OUR RESULT WITH COMMAS
-			result = result.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+				result = result.slice(0, -1);
 
-			$(".display").val(result);
+				if (result === "") result = "0";
+				break;
+			}
+			case "N&P": {
+				if (result === "") {
+					result = "-0";
+				} else if (result[0] === "-") {
+					result = result
+						.replace("-", "")
+						.replace("(", "")
+						.replace(")", "");
+				} else {
+					result = `-(${result})`;
+				}
 
-			prevValue = btnValue;
+				break;
+			}
+			default: {
+				if (curValue === ".") haveDot = true;
+
+				if (
+					(curValue === "." && result === "") ||
+					(curValue === "." && operators.includes(lastElement))
+				)
+					curValue = "0.";
+
+				if (
+					[...operators, "."].includes(lastElement) &&
+					operators.includes(curValue)
+				) {
+					tempDot = haveDot;
+					result = result.toString().slice(0, -1);
+				}
+
+				// SLICE WHEN 0 FRONT OF OPERATORS
+				if (
+					operators.includes(result.slice(result.length - 2)[0]) &&
+					result.slice(result.length - 2)[1] === "0" &&
+					!operators.includes(curValue) &&
+					curValue !== "."
+				)
+					result = result.toString().slice(0, -1);
+
+				// ACCUMULATED RESULT WAIT FOR CALCULATE
+				result += curValue;
+
+				break;
+			}
 		}
-	}
 
-	// FUNCTION HANDLE FOR CHECK LIMIT TEXT
-	function limitText(length) {
-		if (length < 14) {
-			$(".display").css({ "font-size": "3rem" });
-		} else if (length < 16) {
-			$(".display").css({ "font-size": "2.5rem" });
-		} else if (length < 20) {
-			$(".display").css({ "font-size": "2rem" });
-		}
+		// CHECK FOR LIMIT TEXT
+		length = result.toString().length;
+		limitText(length);
 
-		if (length >= 20) {
-			$(".message").val("OUT OF LENGTH");
-			$(".message").css({ color: "red" });
-			result = result.toString().slice(0, 20);
-		} else {
-			$(".message").css({ color: "#c581cd" });
-			$(".message").val(`LIMIT (20) : ${length}`);
-		}
+		// FORMAT OUR RESULT WITH COMMAS
+		result = result.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+		$(".display").val(result);
+
+		prevValue = curValue;
 	}
 
 	// FUNCTION THAT HANDLE WITH KEYPRESS
 	function handleKeyPress(e) {
+		// PREVENT ENTER KEY
+		e.preventDefault();
 		let key = e.key;
 		if (calcKey.includes(key)) {
 			switch (key) {
@@ -187,19 +195,36 @@ $(document).ready(function () {
 		}
 	}
 
-	// CHANGE MODE LIGHT / DARK
-	function changeMode() {
-		if (dark) {
-			$(".btn-switch-mode > img").attr("src", "img/dark-mode.png");
-			dark = false;
-		} else {
-			$(".btn-switch-mode > img").attr("src", "img/light-mode.png");
-			dark = true;
-		}
+	// FUNCTION HANDLE FOR CHECK LIMIT TEXT
+	function limitText(length) {
+		if (length < 14) $(".display").css({ "font-size": "3rem" });
+		else if (length < 16) $(".display").css({ "font-size": "2.4rem" });
+		else if (length < 20) $(".display").css({ "font-size": "1.8rem" });
 
-		$("body").toggleClass("day-mode");
-		$(".calc-container").toggleClass("calc-d-mode");
-		$(".btn").toggleClass("btn-d-mode");
+		if (length >= 20) {
+			$(".message").val("OUT OF LENGTH");
+			$(".message").css({ color: "red" });
+			result = result.toString().slice(0, 20);
+		} else {
+			$(".message").css({ color: "#c581cd" });
+			$(".message").val(`LIMIT (20) : ${length}`);
+		}
+	}
+
+	// CHANGE MODE LIGHT / DARK
+	function toLightMode() {
+		$("body").addClass("light-mode");
+		$(".calc-container").addClass("calc-light-mode");
+		$(".btn").addClass("btn-light-mode");
+		$(".mode").addClass("switch-mode");
+		$(".mode-ctn").addClass("mode-ctn-light");
+	}
+	function toDarkMode() {
+		$("body").removeClass("light-mode");
+		$(".calc-container").removeClass("calc-light-mode");
+		$(".btn").removeClass("btn-light-mode");
+		$(".mode").removeClass("switch-mode");
+		$(".mode-ctn").removeClass("mode-ctn-light");
 	}
 
 	//*# -------------------------------------
@@ -213,9 +238,10 @@ $(document).ready(function () {
 		}
 	});
 
+	// BUTTONS SWITCH MODE
+	$(".btn-switch-dark").on("click", toDarkMode);
+	$(".btn-switch-light").on("click", toLightMode);
+
 	// HANDLE WITH KEY PRESS
 	$(window).on("keydown", handleKeyPress);
-
-	// BUTTON SWITCH MODE
-	$(".btn-switch-mode").on("click", changeMode);
 });
