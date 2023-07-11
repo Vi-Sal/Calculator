@@ -91,40 +91,78 @@ body {
 
 /** ----------------------------- */
 
-.btn-switch-mode {
+.mode-ctn {
 	position: absolute;
-	height: 40px;
-	width: 40px;
+	left: 15px;
+	top: 15px;
+	width: 100px;
+	height: 45px;
+	padding: 0 5px;
+	border-radius: 50px;
+	/* background-color: rgb(144, 144, 144); */
+	background-color: rgb(140, 140, 140);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.mode-ctn-light {
+	background-color: rgb(50, 111, 191);
+}
+.btn-switch-mode {
+	height: 35px;
+	width: 35px;
 	border: none;
 	background-color: transparent;
 	border-radius: 50%;
-	top: 10px;
-	left: 10px;
 	filter: drop-shadow(0px 0px 3px rgb(197, 129, 205));
+	position: relative;
+	z-index: 2;
 }
+
 .btn-switch-mode > img {
 	width: 100%;
 	height: 100%;
 }
-.day-mode {
-	background-color: #ae7cc6;
+.mode {
+	height: 45px;
+	width: 45px;
+	background-color: white;
+	position: absolute;
+	left: 0;
+	border-radius: 50%;
+	z-index: 1;
+	transition: all 0.5s ease-in;
 }
-.day-mode * {
+
+.switch-mode {
+	transform: translateX(55px);
+}
+.light-mode {
+	background-image: linear-gradient(
+		30deg,
+		rgb(100, 213, 207) 10%,
+		rgba(110, 123, 251, 1) 90%
+	);
+}
+.light-mode * {
 	color: #0485f4;
 }
-.calc-d-mode {
-	background-color: rgb(251, 235, 253);
+.calc-light-mode {
+	background-color: rgb(214, 230, 237);
 	box-shadow: 2px 2px 5px rgb(226, 226, 226), -2px -2px 8px #0484f45e;
 }
-.btn-d-mode {
+.btn-light-mode {
 	color: #0485f4;
 	background-color: rgb(245, 245, 245);
 	box-shadow: 2px 2px 5px rgb(185, 204, 229),
 		-2px -2px 8px rgba(4, 132, 244, 0.4);
 }
-.btn-d-mode:active {
+.btn-light-mode:active {
 	box-shadow: inset -2px -2px 5px rgba(4, 132, 244, 0.3),
 		inset 2px 2px 5px rgba(34, 100, 170, 0.7);
+}
+.btn-equal:active {
+	color: #0485f4;
 }
 
 @media screen and (max-width: 550px) {
@@ -143,6 +181,31 @@ body {
 		padding: 25px 20px;
 		gap: 12px;
 	}
+
+
+	.mode-ctn {
+		left: 15px;
+		top: 15px;
+		width: 80px;
+		height: 35px;
+		padding: 0 3px;
+	}
+	.btn-switch-mode {
+		height: 29px;
+		width: 29px;
+	}
+	.mode {
+		height: 35px;
+		width: 35px;
+	}
+	.switch-mode {
+		transform: translateX(45px);
+	}
+
+	.message {
+		right: 30px;
+		font-size: 1.2rem;
+	}
 	.display {
 		font-size: 2.6rem;
 	}
@@ -158,6 +221,10 @@ body {
 		height: 550px;
 		padding: 25px 20px;
 		gap: 10px;
+	}
+	.message {
+		right: 20px;
+		font-size: 1rem;
 	}
 	.display {
 		font-size: 2.2rem;
