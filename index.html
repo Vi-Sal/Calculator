@@ -8,13 +8,16 @@
 	</head>
 	<body class="">
 		<div class="calc-container">
-			<button class="btn-switch-mode">
-				<img src="img/light-mode.png" alt="" />
-			</button>
-			<!-- <input type="text" class="message" value="Warning"> -->
-			<!-- <input type="button" class="display" value="0"/> -->
+			<div class="mode-ctn">
+				<button class="btn-switch-mode btn-switch-dark">
+					<img src="img/dark-mode.png" alt="" />
+				</button>
+				<button class="btn-switch-mode btn-switch-light">
+					<img src="img/light-mode.png" alt="" />
+				</button>
+				<div class="mode"></div>
+			</div>
 			<input type="text" class="message" value="LIMIT IS 20" disabled />
-			<!-- <input type="button" class="display" value="123456" /> -->
 			<input type="button" class="display" value="0" />
 			<button value="AC" class="btn btn-ac">AC</button>
 			<button value="N&P" class="btn">+/-</button>
@@ -37,6 +40,5 @@
 			<button value="=" class="btn btn-equal">=</button>
 		</div>
 		<script src="app.js"></script>
-		<!-- <script src="app1.js"></script> -->
 	</body>
 </html>
